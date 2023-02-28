@@ -1,0 +1,27 @@
+.fondo-rojo {
+    background-color: #dc3545;
+}
+
+.color-rojo {
+    color: #dc3545;
+}
+
+.margen-abajo-cero {
+    margin-bottom: 0;
+}
+
+.margen-arriba {
+    margin-top: 24px;
+}
+
+.ancho-form {
+    width: 580px;
+}
+
+.titulo {
+    color: #dc3545;
+}
+
+.imagen-altura {
+    height: 268px;
+}
