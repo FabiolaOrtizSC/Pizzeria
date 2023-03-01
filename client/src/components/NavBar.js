@@ -7,9 +7,11 @@ import { faPizzaSlice } from "@fortawesome/free-solid-svg-icons";
 const NavBar = () => {
 
     const logOut = () => {
-        axios.get('http://localhost:8000/api/logout')
+        axios.get('http://localhost:8000/api/logout',{}
+        ,{withCredentials: true})
         .then(res=>{
             console.log(res);
+            localStorage.clear();
         })
         .catch(err=>{
             console.log(err)

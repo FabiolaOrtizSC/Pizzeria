@@ -6,13 +6,6 @@ const PizzaForm = () => {
 
     const histo = useHistory();
 
-    const prices = [
-        {topping: 'Pepperoni', price: 5.00},{topping: 'Tomato', price: 5.00},{topping: 'Onion', price: 5.00},
-        {topping: 'Arugula', price: 5.00},{topping: 'Pineapple', price: 5.00},{topping: 'Mushroom', price: 5.00},
-        {topping: 'Pepper', price: 5.00},{topping: 'Bacon', price: 5.00},{topping: 'Garlic', price: 5.00},
-        {topping: 'Red Onion', price: 5.00},{topping: 'Chicken', price: 5.00},{topping: 'Olives', price: 5.00},
-        {topping: 'Basil', price: 5.00},{topping: 'Broccoli', price: 5.00},{topping: 'Oregano', price: 5.00}]
-
     const [checkedValues, setValue] = useState ([]);
 
     const handleChange = e => {
@@ -35,14 +28,12 @@ const PizzaForm = () => {
         crust: "Thin Crust",
         qty: "1",
         toppings: [],
-        price: "$12.00",
-        favorite: true
+        price: "0",
+        favorite: false
     });
 
     const onSubmitHandler = e => {
         e.preventDefault()
-
-
 
         axios.post('http://localhost:8000/api/pizzas/new', {
             idCliente: localStorage.getItem("idUsuario"),
@@ -53,7 +44,7 @@ const PizzaForm = () => {
             toppings: checkedValues,
             price: pizza.price,
             favorite: pizza.favorite
-        })
+        }, {withCredentials: true})
         .then(res=>{
             console.log(res.data.newlyCreatedPizza);
             histo.push("/ticket/" + res.data.newlyCreatedPizza._id);

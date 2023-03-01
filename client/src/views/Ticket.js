@@ -3,9 +3,12 @@ import { Link, useParams, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPizzaSlice } from "@fortawesome/free-solid-svg-icons";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Ticket = () => {
-
+const Ticket = ({priceSize, priceCrust, priceToppings1, priceToppings2}) => {
+    
+    const [prices, setPrices] = useState(null);
     const [pizza, setPizza] = useState(null);
     const [pizzas, setPizzas] = useState([]);
     const histo = useHistory();
@@ -16,9 +19,57 @@ const Ticket = () => {
         .then(res => {
             console.log(res.data.oneSinglePizza);
             setPizza(res.data.oneSinglePizza);
+
+            const size = res.data.oneSinglePizza.size;
+            const priceS = priceSize.filter(priceSize => priceSize.size === size);
+            const crust = res.data.oneSinglePizza.crust;
+            const priceC = priceCrust.filter(priceCrust => priceCrust.crust === crust);
+            
+            // Unimos el array de priceToppings1 y priceToppings2
+            const priceToppings = priceToppings1.concat(priceToppings2);
+            console.log(res.data.oneSinglePizza.toppings);
+            console.log(priceToppings);
+            const toppings = res.data.oneSinglePizza.toppings;
+            let priceT = 0;
+            for (let i = 0; i < toppings.length; i++) {
+                let p = priceToppings.filter(priceToppings => priceToppings.topping === toppings[i]);
+                if (p[0]) {
+                    priceT += p[0].price;
+                }
+            }
+            console.log("price " + priceT);
+            console.log("qty " + res.data.oneSinglePizza.qty);
+            let sum = priceS[0].price + priceC[0].price + priceT;
+            console.log("sum " + sum);
+            // Sumamos todos los precios
+            let total = (sum * res.data.oneSinglePizza.qty).toFixed(2);
+
+            localStorage.setItem("total",total);
+
+            const data = {
+                priceSize: priceS[0].price,
+                priceCrust: priceC[0].price, 
+                priceToppings: priceT,
+                total: total
+            }
+
+            setPrices(data);
         })
         .catch(err => console.log(err))
-    }, [id]);
+    }, [id, priceSize, priceCrust, priceToppings1, priceToppings2]);
+
+    useEffect(() => {
+        axios.put('http://localhost:8000/api/pizzas/update/' + id, {
+            "price": localStorage.getItem("total")
+        }, {withCredentials:true})
+        .then(res => {
+            console.log(res)
+            console.log("actualizado el precio a: "+res)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    });
 
     const deletePizza = e => {
         axios.delete('http://localhost:8000/api/pizzas/delete/' + id, {withCredentials:true})
@@ -28,10 +79,17 @@ const Ticket = () => {
             })
     }
 
+    const showToastMessage = () => {
+        toast.success('Order completed successfully!', {
+            position: toast.POSITION.BOTTOM_RIGHT
+        });
+    };
+
     const logOut = () => {
         axios.get('http://localhost:8000/api/logout')
         .then(res=>{
             console.log(res);
+            localStorage.clear();
         })
         .catch(err=>{
             console.log(err)
@@ -93,7 +151,7 @@ const Ticket = () => {
                                 <li className="list-group-item">
                                 <div className="row justify-content-between">
                                     <div className="col-6">{pizza.size}</div>
-                                    <div className="col-2 text-end">$5.00</div>
+                                    {prices && <div className="col-2 text-end">$ {(prices.priceSize).toFixed(2)}</div>} 
                                 </div></li>
                             </ul>
                             <li className="list-group-item"><span className='text-danger fw-bolder'>Crust: </span></li>
@@ -101,7 +159,7 @@ const Ticket = () => {
                                 <li className="list-group-item">
                                 <div className="row justify-content-between">
                                     <div className="col-6">{pizza.crust}</div>
-                                    <div className="col-2 text-end">$5.00</div>
+                                    {prices && <div className="col-2 text-end">$ {(prices.priceCrust).toFixed(2)}</div>}
                                 </div></li>
                             </ul>
                             <li className="list-group-item"><span className='text-danger fw-bolder'>Toppings: </span></li>
@@ -109,7 +167,7 @@ const Ticket = () => {
                                 <li className="list-group-item">
                                     <div className="row justify-content-between">
                                         <div className="col-6">{(pizza.toppings).toString()}</div>
-                                        <div className="col-2 text-end">{pizza.price}</div>
+                                        {prices && <div className="col-2 text-end">$ {(prices.priceToppings).toFixed(2)}</div>}
                                     </div>
                                 </li>
                             </ul>
@@ -117,19 +175,20 @@ const Ticket = () => {
                         <div className="card-footer text-bg-light text-end">
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item text-bg-light">
-                                    <h6 className='margen-abajo-cero'>Total: $12.99</h6>
+                                    {prices && <h6 className='margen-abajo-cero'>Total: $ {prices.total}</h6>}
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div className="row g-3 mb-3 mt-1">
                         <div className="col d-grid gap-2">
-                            <button className='btn btn-outline-danger' onClick={deletePizza}>Start Over</button>
+                            <button type="button" className='btn btn-outline-danger' onClick={deletePizza}>Start Over</button>
                         </div>
                         <div className="col d-grid gap-2">
-                            <button type="button" className="btn btn-danger">Purchase</button>
+                            <button type="button" className="btn btn-danger" onClick={showToastMessage}>Purchase</button>
                         </div>
                     </div>
+                    <ToastContainer />
                 </div>
             }
         </div>

@@ -20,7 +20,7 @@ const SurpriseMe = () => {
         favorite3: Math.random() > 0.5 ? true : false,
         favorite4: Math.random() > 0.5 ? true : false,
         favorite5: Math.random() > 0.5 ? true : false,
-        price: "20.99",
+        price: "0",
         favorite: true
     });
 
@@ -41,6 +41,7 @@ const SurpriseMe = () => {
             favorite: pizza.favorite
         })
         .then(res=>{
+            console.log(res)
             console.log(res.data.newlyCreatedPizza);
             histo.push("/ticket/" + res.data.newlyCreatedPizza._id);
         })
@@ -54,8 +55,8 @@ const SurpriseMe = () => {
             <NavBar/>
             <h1 className='titulo fw-bolder text-center mb-4'>Craft A Pizza</h1>
             <form onSubmit={onSubmitHandler} className='container w-75'>
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelect" name="state" onChange = {(e)=>setPizza({...pizza, method: e.target.value})}>
+                <div className="form-floating mb-3">
+                    <select className="form-select" id="floatingSelect" name="state" onChange = {(e)=>setPizza({...pizza, method: e.target.value})}>
                         <option value="Carry Out">Carry Out</option>
                         <option value="Delivery">Delivery</option>
                     </select>
@@ -63,8 +64,8 @@ const SurpriseMe = () => {
                 </div>
                 <div className="row g-3 mb-3">
                     <div className="col">
-                        <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" value={pizza.size} onChange = {(e)=>setPizza({...pizza, size: e.target.value})}>
+                        <div className="form-floating">
+                            <select className="form-select" id="floatingSelect" value={pizza.size} onChange = {(e)=>setPizza({...pizza, size: e.target.value})}>
                                 <option value="Large">Large</option>
                                 <option value="Medium">Medium</option>
                                 <option value="Small">Small</option>
@@ -73,8 +74,8 @@ const SurpriseMe = () => {
                         </div>
                     </div>
                     <div className="col">
-                        <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" value={pizza.crust} onChange = {(e)=>setPizza({...pizza, crust: e.target.value})}>
+                        <div className="form-floating">
+                            <select className="form-select" id="floatingSelect" value={pizza.crust} onChange = {(e)=>setPizza({...pizza, crust: e.target.value})}>
                                 <option value="Thin Crust">Thin Crust</option>
                                 <option value="Stuffed Crust">Stuffed Crust</option>
                                 <option value="Cheese Crust">Cheese Crust</option>
@@ -91,8 +92,8 @@ const SurpriseMe = () => {
                         </div>
                     </div>
                 </div>
-                <div class="card mb-3">
-                    <div class="card-body">
+                <div className="card mb-3">
+                    <div className="card-body">
                         <div className="row">
                             <div className="col">
                                 <div className="col form-check">

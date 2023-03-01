@@ -1,28 +1,14 @@
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
+import NavBar from '../components/NavBar';
+import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 
-const PastOrders = () => {
+const Favorites = () => {
 
     const [pizza, setPizza] = useState([]);
 
     const userId = localStorage.getItem("idUsuario");
 
-    const histo = useHistory();
-
-    const updateFavorite = (e,pizzaId) => {
-        axios.put('http://localhost:8000/api/pizzas/update/' + pizzaId, {
-            'favorite':Boolean(e.target.checked)
-        }, {withCredentials:true})
-            .then(res => {
-                console.log(res.data.updatedPizza.favorite)
-                histo.push("/account")
-            })
-            .catch(err=>{
-                console.log(err)
-            }); 
-    }
-    
     useEffect(() => {
         axios.get('http://localhost:8000/api/pizzas', {withCredentials:true})
             .then(res => {
@@ -33,11 +19,12 @@ const PastOrders = () => {
 
     return (
         <div>
-            <h1 className='titulo fw-bolder text-center mb-4'>Past Orders</h1>
+            <NavBar/>
+            <h1 className='titulo fw-bolder text-center mb-4'>Favorites</h1>
             {pizza.map((p, idx)=>{
                 return (
                     <div key={idx}>  
-                        {(p.idCliente === userId) &&
+                        {(p.idCliente === userId) && (p.favorite === true) && 
                             <div>
                                 <div className="container">
                                     <div className="row justify-content-between">
@@ -51,9 +38,8 @@ const PastOrders = () => {
                                                 {" - $ "+p.price}
                                             </p>
                                         </div>
-                                        <div className="col-2 form-check">
-                                            <input className="form-check-input" type="checkbox" defaultChecked={Boolean(p.favorite)} onChange={(e) => {updateFavorite(e,p._id)} }/>
-                                            <label className="form-check-label">Favorite</label>
+                                        <div className="col-2">
+                                            <Link to={"/reorder/"+ p._id } className="btn btn-danger">Re-Order This Pizza</Link>
                                         </div>
                                     </div>
                                     <hr></hr>
@@ -67,4 +53,4 @@ const PastOrders = () => {
     )
 }
 
-export default PastOrders;
+export default Favorites;

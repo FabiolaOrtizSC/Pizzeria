@@ -33,7 +33,7 @@ const Options = () => {
                             </div>
                             <div className="card-text">
                                 <div className="card-body">
-                                <Link to="/reorder" className="btn btn-danger">Go To Re-Order My Fave</Link>
+                                <Link to="/favorites" className="btn btn-danger">Go To Re-Order My Fave</Link>
                                 </div>
                             </div>
                         </div>

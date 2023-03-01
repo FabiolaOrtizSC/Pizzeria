@@ -5,8 +5,9 @@ import NavLogin from './NavLogin';
 
 const LoginForm = () => {
     
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const [error,setError] = useState('');
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
 
     const histo = useHistory()
 
@@ -21,6 +22,7 @@ const LoginForm = () => {
             histo.push('/home')
         }).catch((err)=>{
             console.log(err)
+            setError(err.response.data.error);
         })
     }
 
@@ -36,6 +38,9 @@ const LoginForm = () => {
                 <div className="form-floating mb-3">
                     <input type="password" className="form-control" id="floatingPassword" placeholder="Password" onChange={(e)=>setPassword(e.target.value)}/>
                     <label htmlFor="floatingPassword">Password</label>
+                </div>
+                <div className='text-danger mb-3 text-center'>
+                    {error}
                 </div>
                 <div className='d-grid gap-2'>
                     <button type="submit" className="btn btn-danger">Log In</button>

@@ -3,35 +3,35 @@ const mongoose = require("mongoose");
 const PizzaSchema = new mongoose.Schema({
 	idCliente: {
         type: String,
-        required: [true, "Cliente is required"]
+        required: [true, "Cliente is required."]
     },
     method: {
         type: String,
-        required: [true, "Method is required"]
+        required: [true, "Method is required."]
     },
     size: {
         type: String,
-        required: [true, "Size is required"]
+        required: [true, "Size is required."]
     },
     crust: {
         type: String,
-        required: [true, "Crust is required"]
+        required: [true, "Crust is required."]
     },
     qty: {
         type: Number,
-        required: [true, "Qty is required"]
+        required: [true, "Qty is required."]
     },
     toppings: {
         type: Array,
-        required: [true, "Toppings are required"]
+        required: [true, "Toppings are required."]
     },
     price: {
         type: String,
-        required: [true, "Price is required"]
+        required: [true, "Price is required."]
     },
     favorite: {
         type: Boolean,
-        required: [true, "Favorite is required"]
+        required: [true, "Favorite is required."]
     }
 }, {timestamps: true});
 
